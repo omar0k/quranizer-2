@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../utils";
+import { AUDIO_URL, BASE_URL } from "../utils";
 import { useParams } from "react-router-dom";
+
 import axios from "axios";
+import Player from "../Components/AudioPlayer";
 const ChapterPage = () => {
   const [chapterText, setChapterText] = useState([]);
   const { chapterId } = useParams();
   useEffect(() => {
-    const getChapterText = async () => {
-      axios
-        .get(BASE_URL + `/quran/verses/indopak&chapter_number=${chapterId}`)
-        .then((response) => {
-          setChapterText(response.data.verses);
-        });
+    const fetchData = async () => {
+      try {
+        const textResponse = await axios.get(
+          `${BASE_URL}/quran/verses/indopak?chapter_number=${chapterId}`
+        );
+        setChapterText(textResponse.data.verses);
+      } catch (error) {
+        console.error("Request failed or timed out:", error);
+      }
     };
-    getChapterText();
+    fetchData();
   }, [chapterId]);
-  console.log(chapterText);
   return (
     <div>
+      <button>Show Player</button>
       {chapterText.map((verse) => {
-        return <p>{verse}</p>;
+        return (
+          <p key={verse.id}>
+            {verse.text_indopak}
+            <span>{verse.verse_key.split(":")[1]}</span>
+          </p>
+        );
       })}
     </div>
   );

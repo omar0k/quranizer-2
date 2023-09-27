@@ -17,13 +17,11 @@ const Home = () => {
     getChapterNames();
   }, []);
   return (
-    <div
-      className=" grid grid-cols-3 gap-3
-   "
-    >
+    <div className=" grid grid-cols-3 gap-3">
       {chapterNames?.map((chapter) => {
         return (
           <Link
+            key={chapter.id}
             to={`/${chapter.id}`}
             className="w-full border border-green-300 p-4 flex justify-center"
           >
